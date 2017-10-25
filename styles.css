@@ -1,44 +1,59 @@
 body{
-	font-family: Calibri, sans-serif;
-	font-size: 14px;
-	text-align: center;
+    font-family: Calibri, sans-serif;
+    font-size: 14px;
+    color: grey;
+    background: rgb(240, 248, 242);
 }
 
-html{
-	height:100%;
-	background: rgb(240, 248, 242);
+.row {
+    min-width: 1140px;
+    margin:10px auto;
 }
 
-#chatTitle {
-	margin:10px;
-	font-size:30px;
-	text-align: center;
+.title {
+    text-align: center;
 }
 
-#query-title {
-    margin: 10px;
+.main-content {
+    margin: 15px auto;
+    border: 1px solid rgba(0, 100, 0, 0.31);
+    padding:1em;
+    max-width: 30%;
+    text-align: center;
 }
 
-#chatStats{
-	background-color: #ECE5DD;
+#stats {
+    display:flex;
+    justify-content: space-around;
+    align-items: flex-start;
 }
 
-#title {
-	width: 100%;
-    display: block;
-    color: #075E54;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 25px;
-    border-radius: 10px;
-    text-align:center;
+.item {
+    flex: 1 1 auto;
+    margin: 0 0.1em;
 }
 
-#drop_zone {
-	margin:auto;
-    border: 1px dashed #128C7E;
-	width: 200px;
+th, td, caption {
+    border-bottom: 1px solid #dbdbdb;
 }
+
+caption {
+    font-weight: bold;
+}
+
+th, td, caption {
+    padding: 0.6em;
+    text-align: center;
+}
+
+.table {
+    border-collapse: collapse;
+    margin: 1em auto;
+    width: 100%;
+}
+
+
+
 
 /*------Navigation Bar--------*/
 
@@ -96,21 +111,21 @@ html{
 
 
 .axis text {
-  font: 7px sans-serif;
+    font: 7px sans-serif;
 }
 .axis line,
 .axis path {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
 }
 .path-line {
-  fill: none;
-  stroke: yellow;
-  stroke-width: 1px;
+    fill: none;
+    stroke: yellow;
+    stroke-width: 1px;
 }
 svg {
-  background: #ECE5DD;
+    background: #ECE5DD;
 }
 
 /*
@@ -128,4 +143,3 @@ Checkmark Blue
 #34B7F1
 Chat Background
 #ECE5DD
-*/

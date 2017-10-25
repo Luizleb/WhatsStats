@@ -2,14 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
     <title>WhatsStats</title>
 </head>
 <body>
-    <div id="main-content">
-        <div id="query-title">Select the chat .txt file to see the data.</div>
-        <input type="file" id="files" accept=".txt"/>
+    <div class="row">
+        <h1 class="title">Estatísticas - WhatsApp Chats</h1>
     </div>
+
+    <div class="row">
+        <div class="main-content">
+            <div id="query-title">Selecione o arquivo com a extensão ".txt".</div>
+            <input type="file" id="files" accept=".txt"/>
+        </div>
+        <div id="stats">
+
+        </div>
+    </div>
+
     <script src="chat.js"></script>
 </body>
 </html>

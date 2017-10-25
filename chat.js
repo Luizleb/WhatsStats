@@ -1,12 +1,14 @@
 /**
  * Created by LEB on 24/10/17.
+ * Based on Github's Nating/WhasApp Stats'
  */
+
 (function(){
     var text = "empty";
-    var main = document.getElementById("main-content");
-//Messages
+    var main = document.getElementById("stats");
+    //Messages
     const TEXT = 0, IMAGE = 1, AUDIO = 2, VIDEO = 3, CONTACT = 4;
-//Non Messages
+    //Non Messages
     const MEMBER_IN = 10, MEMBER_OUT = 11, MEMBER_REM = 12, OTHER = 13;
 
     var App =  {
@@ -14,8 +16,7 @@
             Control.init();
         }
     };
-
-
+    
     var Control = {
         // check the File API support and create a listener for the file input
         init: function(){
@@ -29,6 +30,7 @@
     };
 
     var Chat = {
+        // get all the members
         members: function(){
             var lines = text.split('\n');
             let set = new Set();
@@ -39,6 +41,7 @@
             }
             return Array.from(set);
         },
+        // get the chat's stats
         getStats: function() {
             var chat = {};
             // get chat members
@@ -93,19 +96,21 @@
             }
             // output the results
             var chatStats = document.createElement("div");
-            chatStats.setAttribute('id','chatStats');
-            chatStats.innerHTML =
-                '<em>Membros :&emsp;</em>'+chat.members.length +
-                '<br><em>Atividade Total:&emsp;</em>'+chat['total-activity']+
-                '<br><em>Textos:&emsp;</em>'+ chat.texts+
-                '<br><em>Imagens:&emsp;</em>'+chat.images+
-                '<br><em>Audios:&emsp;</em>'+chat.audio+
-                '<br><em>Videos:&emsp;</em>'+chat.video+
-                '<br><em>Cartao de Contato :&emsp;</em>'+chat.contact+
-                '<br><em>Adicionados:&emsp;</em>'+chat['member-in']+
-                '<br><em>Sairam:&emsp;</em>'+chat['member-out']+
-                '<br><em>Removidos:&emsp;</em>'+chat['member-rem']+
-                '<br><em>Outros:&emsp;</em>'+chat['other'];
+            chatStats.setAttribute('class', 'item');
+            var table = document.createElement("table");
+            table.setAttribute('class', 'table');
+            table.innerHTML = '<caption>Estatística Geral</caption>'
+            table.innerHTML += '<tr><th>Item</th><th>Valor</th></tr>';
+            table.innerHTML += '<tr><td>Membros Ativos</td><td>'+chat.members.length+'</td></tr>';
+            table.innerHTML += '<tr><td>Textos</td><td>'+chat.texts+'</td></tr>';
+            table.innerHTML += '<tr><td>Imagens</td><td>'+chat.images+'</td></tr>';
+            table.innerHTML += '<tr><td>Audios</td><td>'+chat.audio+'</td></tr>';
+            table.innerHTML += '<tr><td>Cartão de Contato</td><td>'+chat.contact+'</td></tr>';
+            table.innerHTML += '<tr><td>Adicionados</td><td>'+chat['member-in']+'</td></tr>';
+            table.innerHTML += '<tr><td>Sairam</td><td>'+chat['member-out']+'</td></tr>';
+            table.innerHTML += '<tr><td>Removidos</td><td>'+chat['member-rem']+'</td></tr>';
+            table.innerHTML += '<tr><td>Outros</td><td>'+chat['other']+'</td></tr>';
+            chatStats.appendChild(table);
             main.appendChild(chatStats);
             return chat;
     },
@@ -115,12 +120,8 @@
         var lines = text.split('\n');
         for(let i = 0;i < lines.length;i++){
             if(Utils.isMessage(lines[i])){
-                console.log("Line "+ i + " Is message ? : " + Utils.isMessage(lines[i]));
                 var user = Utils.getUser(lines[i]);
-                console.log("User is : " + user);
                 var type = Utils.getActivityType(lines[i]);
-                console.log("Type is :" + type);
-
                 // check if there is already an object for the user
                 var found = false;
                 for(let i=0; i<users.length; i++) {
@@ -172,8 +173,11 @@
         users.sort(function(a,b){return(a.total > b.total) ? -1 : ((b.total > a.total) ? 1 : 0);});
         // output results
         var usersStats = document.createElement("div");
+        usersStats.setAttribute('class', 'item');
         var table = document.createElement("table");
-        table.innerHTML = '<tr><th>Phone</th><th>Total</th></tr>';
+        table.setAttribute('class', 'table');
+        table.innerHTML = '<caption>Mensagens por Participantes</caption>'
+        table.innerHTML += '<tr><th>Membro</th><th>Total</th></tr>';
         for (var i = 0; i < users.length; i++) {
             table.innerHTML += '<tr><td>'+users[i]['name']+'</td><td>'+users[i]['total']+'</td></tr>';
         }
@@ -204,8 +208,11 @@
             }
             // output results
             var datesStats = document.createElement("div");
+            datesStats.setAttribute('class', 'item');
             var table = document.createElement("table");
-            table.innerHTML = '<tr><th>Date</th><th>Total</th></tr>';
+            table.setAttribute('class', 'table');
+            table.innerHTML = '<caption>Mensagens por Dia</caption>'
+            table.innerHTML += '<tr><th>Data</th><th>Total</th></tr>';
             for (let i = 0; i < dates.length; i++) {
                 table.innerHTML += '<tr><td>'+dates[i]['date']+'</td><td>'+dates[i]['total']+'</td></tr>';
             }
@@ -238,8 +245,11 @@
             times.sort(function(a,b){return(a.time > b.time) ? 1 : ((b.time > a.time) ? -1 : 0);});
             // output results
             var timeStats = document.createElement("div");
+            timeStats.setAttribute('class', 'item');
             var table = document.createElement("table");
-            table.innerHTML = '<tr><th>Hora</th><th>Total</th></tr>';
+            table.setAttribute('class', 'table');
+            table.innerHTML = '<caption>Mensagens por Horário</caption>'
+            table.innerHTML += '<tr><th>Hora</th><th>Total</th></tr>';
             for (let i = 0; i < times.length; i++) {
                 table.innerHTML += '<tr><td>'+times[i]['time']+'</td><td>'+times[i]['total']+'</td></tr>';
             }
@@ -272,8 +282,11 @@
             }
             // output results
             var outersStats = document.createElement("div");
+            outersStats.setAttribute('class', 'item');
             var table = document.createElement("table");
-            table.innerHTML = '<tr><th>Nome</th><th>Data</th></tr>';
+            table.setAttribute('class', 'table');
+            table.innerHTML = '<caption>Saíram...</caption>'
+            table.innerHTML += '<tr><th>Membro</th><th>Data</th></tr>';
             for (let i = 0; i < outers.length; i++) {
                 table.innerHTML += '<tr><td>'+outers[i]['name']+'</td><td>'+outers[i]['date']+'</td></tr>';
             }
