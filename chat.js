@@ -219,6 +219,44 @@
             datesStats.appendChild(table);
             main.appendChild(datesStats);
         },
+        // get the number of messages for each weekday
+        getMessagesByWeekDay: function() {
+            var weekdays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+            var days = [];
+            var lines = text.split('\n');
+            for (let i = 0; i < lines.length; i++) {
+                if(Utils.isMessage(lines[i])) {
+                    var dayId = Utils.getWeekDay(lines[i]);
+                    // check if there is already data for the date
+                    var found = false;
+                    for(let i=0; i < days.length; i++) {
+                        if (days[i]['dayId'] == dayId) {
+                            days[i]['total']++;
+                            found = true;
+                            break;
+                        }
+                    }
+                    //Create new object if not already present
+                    if(!found){
+                        days.push({dayId:dayId, total:1});
+                    }
+                }
+            }
+            // sort the weekdays
+            days.sort(function(a,b){return(a.dayId > b.dayId) ? 1 : ((b.dayId > a.dayId) ? -1 : 0);});
+            // output results
+            var daysStats = document.createElement("div");
+            daysStats.setAttribute('class', 'item');
+            var table = document.createElement("table");
+            table.setAttribute('class', 'table');
+            table.innerHTML = '<caption>Mensagens por Dia da Semana</caption>';
+            table.innerHTML += '<tr><th>Dia</th><th>Total</th></tr>';
+            for (let i = 0; i < days.length; i++) {
+                table.innerHTML += '<tr><td>'+weekdays[days[i]['dayId']]+'</td><td>'+days[i]['total']+'</td></tr>';
+            }
+            daysStats.appendChild(table);
+            main.appendChild(daysStats);
+        },
         // get the number of messages for each hour of the day
         getMessagesByTime: function() {
             var times = [];
@@ -354,6 +392,18 @@
                 return "Non-messages";
             }
         },
+        // get the week day
+        getWeekDay: function(activity) {
+            var date = this.getDate(activity);
+            var adjustedDate = this.adjustDate(date);
+            date = new Date(adjustedDate);
+            return date.getDay();
+        },
+        // dd/mm/yy to mm/dd/yy
+        adjustDate: function(date) {
+            var temp = date.split("/");
+            return temp[1] + "/" + temp[0] + "/" + temp[2];
+        },
         // get the time (hour) of the activity
         getTime: function(activity) {
             if(Utils.isMessage(activity)) {
@@ -384,6 +434,7 @@
                     Chat.getStats();
                     Chat.getMessagesByUser();
                     Chat.getMessagesByDate();
+                    Chat.getMessagesByWeekDay();
                     Chat.getMessagesByTime();
                     Chat.whoLeft();
                 };

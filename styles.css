@@ -46,6 +46,10 @@ th, td, caption {
     text-align: center;
 }
 
+tr:hover {
+    background-color: rgba(140, 246, 149, 0.98);
+}
+
 .table {
     border-collapse: collapse;
     margin: 1em auto;
