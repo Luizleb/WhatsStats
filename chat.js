@@ -1,7 +1,7 @@
 /**
  * Created by LEB on 24/10/17.
  * Based on Github's Nating/WhasApp Stats'
- */
+ * */
 
 (function(){
     var text = "empty";
@@ -99,7 +99,7 @@
             chatStats.setAttribute('class', 'item');
             var table = document.createElement("table");
             table.setAttribute('class', 'table');
-            table.innerHTML = '<caption>Estatística Geral</caption>'
+            table.innerHTML = '<caption>Estatística Geral</caption>';
             table.innerHTML += '<tr><th>Item</th><th>Valor</th></tr>';
             table.innerHTML += '<tr><td>Membros Ativos</td><td>'+chat.members.length+'</td></tr>';
             table.innerHTML += '<tr><td>Textos</td><td>'+chat.texts+'</td></tr>';
@@ -176,7 +176,7 @@
         usersStats.setAttribute('class', 'item');
         var table = document.createElement("table");
         table.setAttribute('class', 'table');
-        table.innerHTML = '<caption>Mensagens por Participantes</caption>'
+        table.innerHTML = '<caption>Mensagens por Participantes</caption>';
         table.innerHTML += '<tr><th>Membro</th><th>Total</th></tr>';
         for (var i = 0; i < users.length; i++) {
             table.innerHTML += '<tr><td>'+users[i]['name']+'</td><td>'+users[i]['total']+'</td></tr>';
@@ -211,7 +211,7 @@
             datesStats.setAttribute('class', 'item');
             var table = document.createElement("table");
             table.setAttribute('class', 'table');
-            table.innerHTML = '<caption>Mensagens por Dia</caption>'
+            table.innerHTML = '<caption>Mensagens por Dia</caption>';
             table.innerHTML += '<tr><th>Data</th><th>Total</th></tr>';
             for (let i = 0; i < dates.length; i++) {
                 table.innerHTML += '<tr><td>'+dates[i]['date']+'</td><td>'+dates[i]['total']+'</td></tr>';
@@ -248,7 +248,7 @@
             timeStats.setAttribute('class', 'item');
             var table = document.createElement("table");
             table.setAttribute('class', 'table');
-            table.innerHTML = '<caption>Mensagens por Horário</caption>'
+            table.innerHTML = '<caption>Mensagens por Horário</caption>';
             table.innerHTML += '<tr><th>Hora</th><th>Total</th></tr>';
             for (let i = 0; i < times.length; i++) {
                 table.innerHTML += '<tr><td>'+times[i]['time']+'</td><td>'+times[i]['total']+'</td></tr>';
@@ -285,7 +285,7 @@
             outersStats.setAttribute('class', 'item');
             var table = document.createElement("table");
             table.setAttribute('class', 'table');
-            table.innerHTML = '<caption>Saíram...</caption>'
+            table.innerHTML = '<caption>Saíram...</caption>';
             table.innerHTML += '<tr><th>Membro</th><th>Data</th></tr>';
             for (let i = 0; i < outers.length; i++) {
                 table.innerHTML += '<tr><td>'+outers[i]['name']+'</td><td>'+outers[i]['date']+'</td></tr>';
@@ -298,7 +298,7 @@
     var Utils = {
         // check if the line is an activity
         isActivity: function(line) {
-            return line.split(":").length > 1;
+            return line.split(":").length > 3;
         },
         // check if the activity is a message
         isMessage: function(activity) {
