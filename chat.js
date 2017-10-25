@@ -4,11 +4,13 @@
  * */
 
 (function(){
+    // variable that will receive the file content
     var text = "empty";
+    // output div
     var main = document.getElementById("stats");
-    //Messages
+    // code for messages types
     const TEXT = 0, IMAGE = 1, AUDIO = 2, VIDEO = 3, CONTACT = 4;
-    //Non Messages
+    // code for non messages types
     const MEMBER_IN = 10, MEMBER_OUT = 11, MEMBER_REM = 12, OTHER = 13;
 
     var App =  {
@@ -413,23 +415,16 @@
             else{
                 return "Non-messages";
             }
-        },
-        //
-        removeNonActivity: function(array, param) {
-            for(let i = 0; i < array.length ; i++) {
-                if(array[i][param]=='Non-messages'){
-                    array.splice(i , 1);
-                }
-            }
         }
     };
 
     var File = {
         handleFileSelect: function(evt) {
             var file = evt.target.files[0];
-            if(file) {
+            if (file) {
                 var reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
+                    document.getElementById("stats").innerHTML = "";
                     text = e.target.result;
                     Chat.getStats();
                     Chat.getMessagesByUser();
