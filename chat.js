@@ -14,7 +14,7 @@
     const MEMBER_IN = 10, MEMBER_OUT = 11, MEMBER_REM = 12, OTHER = 13;
 
     var App =  {
-        init: function(){
+        init: function() {
             Control.init();
         }
     };

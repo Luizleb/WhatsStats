@@ -1,3 +1,5 @@
 .idea
 *.txt
 Old/
+.DS_Store
+d3/
