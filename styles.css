@@ -53,17 +53,18 @@ tr:hover {
 .table {
     border-collapse: collapse;
     margin: 1em auto;
-    width: 100%;
+    width: 70%;
 }
-
-
-
 
 /*------Navigation Bar--------*/
 
-.topnav {
-    overflow: hidden;
+#wrapper {
     display: none;
+}
+
+.topnav {
+    display: flex;
+    justify-content: space-around;
 }
 
 .topnav a {
@@ -71,12 +72,12 @@ tr:hover {
     display: block;
     color: #075E54;
     text-align: center;
-    padding: 14px 16px;
+    padding: 1em;
     text-decoration: none;
-    font-size: 17px;
-    border-radius: 10px;
+    font-size: 0.9em;
+    border-radius: 5px;
     background-color: #FFFFFF;
-    margin:10px;
+    margin:5px;
 }
 
 .topnav a:hover {
@@ -89,62 +90,7 @@ tr:hover {
     color: white;
 }
 
-.topnav input {
-    float: left;
-    display: block;
-    color: #f2f2f2;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 17px;
-    border-radius: 10px;
-    background-color: #25D366;
-    margin:10px;
-}
-
-.topnav input:hover {
-    background-color: #128C7E;
-    color: white;
-}
-
 .topnav input.active {
     background-color: #4CAF50;
     color: white;
 }
-
-/*---------------------Stacked Horizontal Bar Chart CSS----------------------*/
-
-
-.axis text {
-    font: 7px sans-serif;
-}
-.axis line,
-.axis path {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-}
-.path-line {
-    fill: none;
-    stroke: yellow;
-    stroke-width: 1px;
-}
-svg {
-    background: #ECE5DD;
-}
-
-/*
-//---------------Whatsapp Colors---------------------
-Teal Green
-#075E54
-#128C7E
-Light Green
-#25D366
-White
-#FFFFFF
-Outgoing Chat Bubble
-#DCF8C6
-Checkmark Blue
-#34B7F1
-Chat Background
-#ECE5DD

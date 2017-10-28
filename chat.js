@@ -186,6 +186,27 @@
             }
             return chat;
         },
+        // show general Statistics
+        showGeneralStats: function(data) {
+            document.getElementById("stats").innerHTML = "";
+            var chatStats = document.createElement("div");
+            chatStats.setAttribute('class', 'item');
+            var table = document.createElement("table");
+            table.setAttribute('class', 'table');
+            table.innerHTML = '<caption>Estatística Geral</caption>';
+            table.innerHTML += '<tr><th>Item</th><th>Valor</th></tr>';
+            table.innerHTML += '<tr><td>Membros Ativos</td><td>'+data.members.length+'</td></tr>';
+            table.innerHTML += '<tr><td>Textos</td><td>'+data.texts+'</td></tr>';
+            table.innerHTML += '<tr><td>Imagens</td><td>'+data.images+'</td></tr>';
+            table.innerHTML += '<tr><td>Audios</td><td>'+data.audio+'</td></tr>';
+            table.innerHTML += '<tr><td>Cartão de Contato</td><td>'+data.contact+'</td></tr>';
+            table.innerHTML += '<tr><td>Adicionados</td><td>'+data['member-in']+'</td></tr>';
+            table.innerHTML += '<tr><td>Sairam</td><td>'+data['member-out']+'</td></tr>';
+            table.innerHTML += '<tr><td>Removidos</td><td>'+data['member-rem']+'</td></tr>';
+            table.innerHTML += '<tr><td>Outros</td><td>'+data['other']+'</td></tr>';
+            chatStats.appendChild(table);
+            main.appendChild(chatStats);
+        },
         // get the number of messages by member
         getMessagesByUser: function() {
             hasNames = true;
@@ -250,49 +271,6 @@
                 source: users,
                 title: "Mensagens por Participantes"
             };
-        },
-        // show general Statistics
-        showGeneralStats: function(data) {
-            document.getElementById("stats").innerHTML = "";
-            var chatStats = document.createElement("div");
-            chatStats.setAttribute('class', 'item');
-            var table = document.createElement("table");
-            table.setAttribute('class', 'table');
-            table.innerHTML = '<caption>Estatística Geral</caption>';
-            table.innerHTML += '<tr><th>Item</th><th>Valor</th></tr>';
-            table.innerHTML += '<tr><td>Membros Ativos</td><td>'+data.members.length+'</td></tr>';
-            table.innerHTML += '<tr><td>Textos</td><td>'+data.texts+'</td></tr>';
-            table.innerHTML += '<tr><td>Imagens</td><td>'+data.images+'</td></tr>';
-            table.innerHTML += '<tr><td>Audios</td><td>'+data.audio+'</td></tr>';
-            table.innerHTML += '<tr><td>Cartão de Contato</td><td>'+data.contact+'</td></tr>';
-            table.innerHTML += '<tr><td>Adicionados</td><td>'+data['member-in']+'</td></tr>';
-            table.innerHTML += '<tr><td>Sairam</td><td>'+data['member-out']+'</td></tr>';
-            table.innerHTML += '<tr><td>Removidos</td><td>'+data['member-rem']+'</td></tr>';
-            table.innerHTML += '<tr><td>Outros</td><td>'+data['other']+'</td></tr>';
-            chatStats.appendChild(table);
-            main.appendChild(chatStats);
-        },
-        // show outputs
-        showStats: function(data) {
-            var name;
-            document.getElementById("stats").innerHTML = "";
-            var usersStats = document.createElement("div");
-            usersStats.setAttribute('class', 'item');
-            var table = document.createElement("table");
-            table.setAttribute('class', 'table');
-            table.innerHTML = '<caption>' + data.title + '</caption>';
-            table.innerHTML += '<tr><th>Item</th><th>Total</th></tr>';
-            for (var i = 0; i < data.source.length; i++) {
-                if(hasNames) {
-                    name = Utils.getName(data.source[i]['name']);
-                } else {
-                    name = data.source[i]['name'];
-                }
-                table.innerHTML += '<tr><td>'+ name +'</td><td>'+data.source[i]['total']+'</td></tr>';
-            }
-            usersStats.appendChild(table);
-            main.appendChild(usersStats);
-            hasNames = false;
         },
         // get the number of messages for each date
         getMessagesByDate: function() {
@@ -410,6 +388,28 @@
                 source: outers,
                 title: "Membros que saíram"
             };
+        },
+        // show outputs
+        showStats: function(data) {
+            var name;
+            document.getElementById("stats").innerHTML = "";
+            var usersStats = document.createElement("div");
+            usersStats.setAttribute('class', 'item');
+            var table = document.createElement("table");
+            table.setAttribute('class', 'table');
+            table.innerHTML = '<caption>' + data.title + '</caption>';
+            table.innerHTML += '<tr><th>Item</th><th>Total</th></tr>';
+            for (var i = 0; i < data.source.length; i++) {
+                if(hasNames) {
+                    name = Utils.getName(data.source[i]['name']);
+                } else {
+                    name = data.source[i]['name'];
+                }
+                table.innerHTML += '<tr><td>'+ name +'</td><td>'+data.source[i]['total']+'</td></tr>';
+            }
+            usersStats.appendChild(table);
+            main.appendChild(usersStats);
+            hasNames = false;
         }
     };
 
@@ -531,7 +531,7 @@
                     messagesByTime = Chat.getMessagesByTime();
                     messagesByWeekday = Chat.getMessagesByWeekDay();
                     membersOut = Chat.getMembersOut();
-                    document.getElementById("myTopnav").style.display = "block";
+                    document.getElementById("wrapper").style.display = "block";
                 };
                 reader.readAsText(file);
             } else {
