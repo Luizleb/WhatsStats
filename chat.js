@@ -1,9 +1,88 @@
 /**
  * Created by LEB on 24/10/17.
  * Based on Github's Nating/WhasApp Stats'
+ *
  * */
 
 (function(){
+    // directory with members numbers and names
+    var list = [];
+    var directory = [{number: " ‪+55 31 9961‑9730‬", name: "Delfonso"}, {number: " ‪+55 31 8793‑3002‬", name: "Fábio Magalhães"},
+        {number: " ‪+55 21 99156‑2389‬", name:"Kilynho"}, {number: " ‪+55 31 9961‑1422‬", name: "Pirex"},
+        {number: " ‪+55 35 8898‑7194‬", name:"Reinaldo"}, {number: " ‪+55 31 8855‑2585‬", name: "Rhelman"},
+        {number: " ‪+55 21 96700‑0087‬‬", name: "César Guimarães"},{number: "  ‪+55 21 98748‑8787‬", name: "Luiz Valentini"},
+        {number: " Leandro Quadros Amorim", name: "Leandro Quadros Amorim"},{number: " ‪+55 31 8812‑1530‬", name: "Toni Claret"},
+        {number: " ‪+55 21 98164‑5003‬", name: "Edson Leite"},{number: " ‪+55 31 9961‑1735‬", name: "Fernando"},
+        {number: " ‪+55 31 9609‑0304‬", name: "Gilberto Caixeta"},{number: " ‪+55 31 9819‑5680‬", name: "Jorge Inácio"},
+        {number: " ‪+55 31 8880‑1378‬", name: "Maria de Lourdes Prazeres"},{number: "‪ ‪+55 21 98291‑1015‬", name: "Cida"},
+        {number: " ‪+55 31 9942‑2749‬", name: "Vamberto de Melo"},{number: " ‪+55 31 8470‑1103‬", name: "José Roberto Fernandes"},
+        {number: " ‪+55 31 8041‑4181‬", name: "Laércio Rezende"},{number: " LEB", name: "Luiz Eduardo Batista"},
+        {number: " ‪+55 31 8959‑2059‬", name: "Maria Aparecida"},{number: " ‪+55 74 9979‑2100‬", name: "Celso Piedade"},
+        {number: " ‪+55 31 8653‑6964‬", name: "Samir Cerqueira"},{number: " ‪+55 21 98884‑0026‬", name: "Flávio Versiani"},
+        {number: " ‪+55 31 9287‑6197‬", name: "Carlos Pereira"},{number: " ‪+55 31 8795‑3200‬", name: "Helvécio Bigode"},
+        {number: " ‪+55 22 99967‑5722‬", name: "Luiz Antonio Coelho"},{number: "  ‪+55 31 8844‑1956‬", name: "Tomaz"},
+        {number: " ‪+55 21 99401‑3575‬", name: "Magela"},{number: " ‪+55 11 98963‑5065‬", name: "Cida"},
+        {number: " ‪+55 62 8466‑8855‬", name: "Antonio Peixoto"},{number: " ‪+55 31 9961‑1121‬", name: "Geraldo Victor"},
+        {number: " ‪+55 31 8433‑3573‬", name: "Fábio Freitas"},{number: " ‪+55 31 8984‑6365‬", name: "Helio Geraldo da Silva"},
+        {number: " ‪+55 31 8011‑4665‬", name: "Alexandre Mansur"},{number: " ‪+55 31 9133‑1331‬", name: "Simonidas Brasil"},
+        {number: " ‪+55 27 99988‑6086‬", name: "José dos Reis"},{number: " ‪+55 31 9655‑1171‬", name: "Catarina Lopes"},
+        {number: " ‪+55 32 9139‑9070‬", name: "TBD"},{number: " ‪+55 31 8417‑9410‬", name: "TBD"},
+        {number: " ‪+55 31 9857‑0495‬", name: "Joaquim Ferraz"},{number: " ‪+55 21 99128‑1127‬", name: "Jacaré"},
+        {number: " ‪+55 31 8895‑8662‬", name: "Marli Coelho"},{number: " ‪+55 31 8928‑0425‬", name: "Taquinho"},
+        {number: " ‪+55 31 8811‑4839‬", name: "Eleonice"},{number: " ‪+55 31 8782‑1808‬", name: "Maria Regina Santos"},
+        {number: " ‪+55 31 8010‑3140‬", name: "Regina"},{number: " ‪+55 71 9618‑8309‬", name: "Patrícia Maia"},
+        {number: " ‪+55 27 98814‑7790‬", name: "Mauricio Carazza"},{number: "  ‪+55 34 9961‑6563‬", name: "Sebastião Barbosa"},
+        {number: " Senem", name: "Antonio Senem da Cruz"},{number: " ‪+55 21 99249‑1510‬", name: "Nora Maia"},
+        {number: " ‪+55 31 8040‑3741‬", name: "Roque"},{number: " ‪+55 27 99820‑4032‬", name: "Ifigênia Mol"},
+        {number: " ‪+55 27 98801‑2800‬", name: "José Mendes"},{number: " ‪+55 21 99379‑4104‬", name: "Arcioni Nem"},
+        {number: " ‪+55 21 99397‑5697‬", name: "Pilar Godoy"},{number: " ‪+55 77 9180‑1035‬", name: "Derli Fausto"},
+        {number: " ‎‪+55 27 99856‑0381‬", name: "Paulo Márcio Gonzaga"},{number: " ‪+55 21 97297‑0229‬", name: "Sérgio Quintão"},
+        {number: " ‪+55 31 8772‑1705‬", name: "João Pinto"},{number: " ‪+55 27 99933‑3151‬", name: "Geraldo Fernandes"},
+        {number: " ‪+55 27 98807‑0641‬", name: "José Carvalho"},{number: " ‪+55 31 8811‑1112‬", name: "Pedro Chaves"},
+        {number: " ‪+55 31 9585‑4422‬", name: "Paulinho"},{number: " ‪+55 22 98803‑8930‬", name: "Carlos Neves"},
+        {number: " ‪+55 31 8888‑5418‬", name: "Mauro"},{number: " ‪+55 31 8813‑1215‬", name: "Edton Araujo"},
+        {number: " ‪+55 79 9956‑3627‬", name: "Vicente"},{number: " ‪+55 31 9200‑6151‬", name: "Taquinho Repolho"},
+        {number: " ‪+55 82 9999‑9327‬", name: "Bete Salgado"},{number: " ‪+55 31 9587‑7897‬", name: "Edson Sotero"},
+        {number: " ‪+55 31 8892‑4832‬", name: "Valdete Braga"},{number: " Jorge Black", name: "Jorge Black"},
+        {number: " ‪+55 31 8816‑4876‬", name: "Lucia Gonçalves"},{number: " ‪+55 37 9993‑2703‬", name: "Geraldo Mendonça"},
+        {number: " ‪+55 21 98196‑9919‬", name: "Eurico"},{number: " ‪+55 31 9961‑1473‬", name: "José Eduardo"},
+        {number: " ‪+55 31 9963‑7956‬", name: "Sérgio Leocadio"},{number: " ‪+55 31 9506‑8028‬", name: "José Luis"},
+        {number: " ‪+55 31 7553‑8668‬", name: "Dâmaso Dornelas"},{number: "  ‪+55 21 98884‑7050‬", name: "Jussara Côrtes"},
+        {number: " ‪+55 31 9358‑3198‬", name: "Maria da Glória"},{number: " ‪+55 22 98126‑7578‬", name: "José Pena"},
+        {number: " ‪+55 31 8448‑0584‬", name: "João Bosco Carvalho"},{number: " ‪+55 31 8370‑2002‬", name: "José Geraldo Brandão"},
+        {number: " ‪+55 21 98702‑9450‬", name: "Geraldo Santana"},{number: " ‪+55 79 9988‑1666‬", name: "Ailton Evangelista"},
+        {number: " ‪+55 33 9919‑9471‬", name: "Luís Angelo Abreu"},{number: " ‪+55 31 9362‑7632‬", name: "Luiz Jatobá"},
+        {number: " ‪+55 31 9679‑3746‬", name: "Mauro"},{number: " ‪+55 34 9961‑9060‬", name: "Eduardo Bontempo"},
+        {number: " Cristina Dornelas", name: "Cristina Dornelas"},{number: " ‪+55 31 8689‑1912‬", name: "Ivan Rodrigues"},
+        {number: " ‪+55 31 8782‑6237‬", name: "José Geraldo Barbosa"},{number: " ‪+55 31 9961‑7339‬", name: "Sebastião Ribeiro Júnior"},
+        {number: " ‪+55 31 9125‑7992‬", name: "Livio Elias"},{number: " ‪+55 31 9194‑9120‬", name: "Silvia"},
+        {number: "  ‪+55 31 9652‑7444‬", name: "Gilberto Mendonça"},{number: " ‪+55 31 8895‑8662‬", name: "Osvaldo Dias"},
+        {number: " ‪+55 22 99214‑9733‬", name: "Télio Braz"},{number: " ‪+55 31 8860‑7240‬", name: "Valéria"},
+        {number: " ‪+55 31 8868‑1033‬", name: "Junior Grossi"},{number: " ‪+55 31 8514‑3723‬", name: "Eli"},
+        {number: " ‪+55 79 8814‑3161‬", name: "Galo"},{number: " ‪+55 31 8848‑3056‬", name: "Virgilio Figueiredo"},
+        {number: " ‪+55 85 8595‑8793‬", name: "Geraldo Herivelto"},{number: " ‪+55 79 8872‑0002‬", name: "Carlos Trivellato"},
+        {number: " ‪+55 37 8839‑7197‬", name: "Geraldo Pinheiro"},{number: " ‪+55 31 8475‑0936‬", name: "Marcelo Donizete"},
+        {number: " ‪+55 31 8781‑6902‬", name: "Fernando Luiz Santos"},{number: " ‪+55 79 9121‑0253‬", name: "Deículo Pedrosa"},
+        {number: " ‪+1 (201) 658‑0140‬", name: "Terezinha dos Santos"},{number: " ‪+55 27 99814‑1252‬", name: "Abdon"},
+        {number: " ‪+55 31 8926‑8229‬", name: "Kide Svjunior"},{number: " ‪+55 31 8395‑2842‬", name: "Rogério"},
+        {number: " Virginia Loiola", name: "Virginia Loiola"},{number: " ‪+55 31 9117‑7296‬", name: "Vinicio Vitorio"},
+        {number: " ‪+55 31 9142‑1968‬", name: "Benedito Vitorio"},{number: " ‪+55 94 8405‑7767‬", name: "Milton Lima"},
+        {number: " ‪+55 31 9811‑8711‬", name: "Nacif Sirio"},{number: " ‪+55 31 7307‑5001‬", name: "Luiz Paiva"},
+        {number: " ‪+55 85 9712‑0629‬", name: "Elenice"},{number: " ‪+55 31 9777‑9000‬", name: "Zeferino"},
+        {number: "  ‪+55 31 9961‑9783‬", name: "Fernando Quintão"},{number: " ‪+55 31 9180‑1331‬", name: "Luiz Carlos"},
+        {number: "  ‪+55 31 8813‑3102‬", name: "Maria da Glória Rodrigues"},{number: " ‪+55 31 9653‑4302‬", name: "Hailton"},
+        {number: " ‪+55 21 98375‑0523‬", name: "João Bosco Araújo"},{number: " ‪+55 31 9892‑1533‬", name: "Carlos Alvim"},
+        {number: " ‪+55 22 99983‑7923‬", name: "Amaral"},{number: " ‪+55 31 9612‑7459‬", name: "Anselmo"},
+        {number: " ‪+55 31 9117‑9175‬", name: "Norma Paschoal"},{number: " ‪+55 21 98114‑3737‬", name: "Junior - Elir Durso"},
+        {number: " ‪+55 31 9822‑4000‬", name: "Professor Emiliano"},{number: " ‪+55 31 9236‑7512‬", name: "Geraldo Rodrigues"},
+        {number: "  ‪+55 21 98845‑4114‬", name: "Romero Peixoto"},{number: " ‪+55 31 9345‑0515‬", name: "Julio Vasconcelos"},
+        {number: " ‪+55 31 9874‑6141‬", name: "Clovis"},{number: " ‪+55 31 8752‑6666‬", name: "José Fagundes"},
+        {number: " ‪+55 71 8307‑0468‬", name: "Décio São José"},{number: " ‪+55 31 9961‑1672‬", name: "Procópio"},
+        {number: " ‪+55 31 8861‑5564‬", name: "José Miguel"},{number: " ‪+55 31 8868‑1126‬", name: "Carlos"},
+        {number: " ‪+55 13 99153‑0163‬", name: "Carlos Bonfim"},{number: " ‪+55 22 99985‑0678‬", name: "Valter Murta"},
+        {number: " ‪+55 31 8838‑2173‬", name: "Luiz França"},{number: " ‪+55 38 9904‑9226‬", name: "Sônia"},
+        {number: " ‪+55 61 8112‑7412‬", name: "Carlos Silva"},{number: " ‪+55 31 9877‑5013‬", name: "Wander de Castro"},
+        {number: "‪ ‪+55 13 99650‑2750‬", name: "José Geraldo Costa Pinto"}];
     // variable that will receive the file content
     var text = "empty";
     // output div
@@ -32,7 +111,7 @@
     };
 
     var Chat = {
-        // get all the members
+        // get all active members
         members: function(){
             var lines = text.split('\n');
             let set = new Set();
@@ -41,7 +120,8 @@
                     set.add(lines[i].split(':')[3]);
                 }
             }
-            return Array.from(set);
+            list = Array.from(set);
+            return list;
         },
         // get the chat's stats
         getStats: function() {
@@ -181,7 +261,7 @@
         table.innerHTML = '<caption>Mensagens por Participantes</caption>';
         table.innerHTML += '<tr><th>Membro</th><th>Total</th></tr>';
         for (var i = 0; i < users.length; i++) {
-            table.innerHTML += '<tr><td>'+users[i]['name']+'</td><td>'+users[i]['total']+'</td></tr>';
+            table.innerHTML += '<tr><td>'+ Utils.getName(users[i]['name']) +'</td><td>'+users[i]['total']+'</td></tr>';
         }
         usersStats.appendChild(table);
         main.appendChild(usersStats);
@@ -377,8 +457,8 @@
         // get the id of the member
         getUser: function(activity) {
             if(Utils.isMessage(activity)) {
-                var member = activity.split(':')[3];
-                return member.substring(1, member.length);
+                var temp = activity.split(':')[3];
+                return temp.substr(1, temp.length);
             }
             else {
                 return "Non-messages";
@@ -414,6 +494,22 @@
             }
             else{
                 return "Non-messages";
+            }
+        },
+        // get the name in directory (if it exists...) - Not working...
+        getName: function(user) {
+            var name;
+            for(let i=0; i<directory.length; i++) {
+                var temp = directory[i]["number"];
+                if(temp.substring(1, temp.length) == user) {
+                    name = directory[i]["name"];
+                    break;
+                }
+            }
+            if(name === "TBD") {
+                return user;
+            } else {
+                return name;
             }
         }
     };
