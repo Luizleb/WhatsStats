@@ -6,7 +6,6 @@
 
 (function(){
     // directory with members numbers and names
-    var list = [];
     var directory = [{number: " ‪+55 31 9961‑9730‬", name: "Delfonso"}, {number: " ‪+55 31 8793‑3002‬", name: "Fábio Magalhães"},
         {number: " ‪+55 21 99156‑2389‬", name:"Kilynho"}, {number: " ‪+55 31 9961‑1422‬", name: "Pirex"},
         {number: " ‪+55 35 8898‑7194‬", name:"Reinaldo"}, {number: " ‪+55 31 8855‑2585‬", name: "Rhelman"},
@@ -91,6 +90,9 @@
     const TEXT = 0, IMAGE = 1, AUDIO = 2, VIDEO = 3, CONTACT = 4;
     // code for non messages types
     const MEMBER_IN = 10, MEMBER_OUT = 11, MEMBER_REM = 12, OTHER = 13;
+    // main variables to store the queries results
+    var list, generalStats, messagesByUser, messagesByDay, messagesByWeekday, messagesByTime, membersOut;
+    var hasNames = false;
 
     var App =  {
         init: function(){
@@ -106,6 +108,12 @@
             } else {
                 alert('The File APIs are not fully supported in this browser.');
             }
+            document.getElementById('generalStats').addEventListener('click', function(){Chat.showGeneralStats(generalStats);}, false);
+            document.getElementById('msgUser').addEventListener('click', function(){Chat.showStats(messagesByUser);}, false);
+            document.getElementById('msgDay').addEventListener('click', function(){Chat.showStats(messagesByDay);}, false);
+            document.getElementById('msgWeekday').addEventListener('click', function(){Chat.showStats(messagesByWeekday);}, false);
+            document.getElementById('msgTime').addEventListener('click', function(){Chat.showStats(messagesByTime);}, false);
+            document.getElementById('membersOut').addEventListener('click', function(){Chat.showStats(membersOut);}, false);
             document.getElementById('files').addEventListener('change', File.handleFileSelect, false);
         }
     };
@@ -124,7 +132,7 @@
             return list;
         },
         // get the chat's stats
-        getStats: function() {
+        getGeneralStats: function() {
             var chat = {};
             // get chat members
             chat.members = Chat.members();
@@ -176,95 +184,115 @@
                     chat['total-activity']++;
                 }
             }
-            // output the results
+            return chat;
+        },
+        // get the number of messages by member
+        getMessagesByUser: function() {
+            hasNames = true;
+            var users = [];
+            var lines = text.split('\n');
+            for (let i = 0; i < lines.length; i++) {
+                if (Utils.isMessage(lines[i])) {
+                    var user = Utils.getUser(lines[i]);
+                    var type = Utils.getActivityType(lines[i]);
+                    // check if there is already an object for the user
+                    var found = false;
+                    for (let i = 0; i < users.length; i++) {
+                        if (users[i]['name'] == user) {
+                            switch (type) {
+                                case TEXT:
+                                    users[i]['texts']++;
+                                    break;
+                                case IMAGE:
+                                    users[i]['images']++;
+                                    break;
+                                case AUDIO:
+                                    users[i]['audio']++;
+                                    break;
+                                case VIDEO:
+                                    users[i]['video']++;
+                                    break;
+                                default:
+                                    users[i]['other']++;
+                            }
+                            users[i]['total']++;
+                            found = true;
+                            break;
+                        }
+                    }
+                    //Create new user object if not already present
+                    if (!found) {
+                        users.push({name: user, total: 1, texts: 0, images: 0, audio: 0, video: 0, other: 0});
+                        switch (type) {
+                            case TEXT:
+                                users[users.length - 1]['texts']++;
+                                break;
+                            case IMAGE:
+                                users[users.length - 1]['images']++;
+                                break;
+                            case AUDIO:
+                                users[users.length - 1]['audio']++;
+                                break;
+                            case VIDEO:
+                                users[users.length - 1]['video']++;
+                                break;
+                            default:
+                                users[users.length - 1]['other']++;
+                        }
+                    }
+                }
+            }
+            // sort descending
+            users.sort(function (a, b) {
+                return (a.total > b.total) ? -1 : ((b.total > a.total) ? 1 : 0);
+            });
+            return {
+                source: users,
+                title: "Mensagens por Participantes"
+            };
+        },
+        // show general Statistics
+        showGeneralStats: function(data) {
+            document.getElementById("stats").innerHTML = "";
             var chatStats = document.createElement("div");
             chatStats.setAttribute('class', 'item');
             var table = document.createElement("table");
             table.setAttribute('class', 'table');
             table.innerHTML = '<caption>Estatística Geral</caption>';
             table.innerHTML += '<tr><th>Item</th><th>Valor</th></tr>';
-            table.innerHTML += '<tr><td>Membros Ativos</td><td>'+chat.members.length+'</td></tr>';
-            table.innerHTML += '<tr><td>Textos</td><td>'+chat.texts+'</td></tr>';
-            table.innerHTML += '<tr><td>Imagens</td><td>'+chat.images+'</td></tr>';
-            table.innerHTML += '<tr><td>Audios</td><td>'+chat.audio+'</td></tr>';
-            table.innerHTML += '<tr><td>Cartão de Contato</td><td>'+chat.contact+'</td></tr>';
-            table.innerHTML += '<tr><td>Adicionados</td><td>'+chat['member-in']+'</td></tr>';
-            table.innerHTML += '<tr><td>Sairam</td><td>'+chat['member-out']+'</td></tr>';
-            table.innerHTML += '<tr><td>Removidos</td><td>'+chat['member-rem']+'</td></tr>';
-            table.innerHTML += '<tr><td>Outros</td><td>'+chat['other']+'</td></tr>';
+            table.innerHTML += '<tr><td>Membros Ativos</td><td>'+data.members.length+'</td></tr>';
+            table.innerHTML += '<tr><td>Textos</td><td>'+data.texts+'</td></tr>';
+            table.innerHTML += '<tr><td>Imagens</td><td>'+data.images+'</td></tr>';
+            table.innerHTML += '<tr><td>Audios</td><td>'+data.audio+'</td></tr>';
+            table.innerHTML += '<tr><td>Cartão de Contato</td><td>'+data.contact+'</td></tr>';
+            table.innerHTML += '<tr><td>Adicionados</td><td>'+data['member-in']+'</td></tr>';
+            table.innerHTML += '<tr><td>Sairam</td><td>'+data['member-out']+'</td></tr>';
+            table.innerHTML += '<tr><td>Removidos</td><td>'+data['member-rem']+'</td></tr>';
+            table.innerHTML += '<tr><td>Outros</td><td>'+data['other']+'</td></tr>';
             chatStats.appendChild(table);
             main.appendChild(chatStats);
-            return chat;
-    },
-    // get the number of messages by member
-    getMessagesByUser: function() {
-        var users = [];
-        var lines = text.split('\n');
-        for(let i = 0;i < lines.length;i++){
-            if(Utils.isMessage(lines[i])){
-                var user = Utils.getUser(lines[i]);
-                var type = Utils.getActivityType(lines[i]);
-                // check if there is already an object for the user
-                var found = false;
-                for(let i=0; i<users.length; i++) {
-                    if(users[i]['name'] == user) {
-                        switch(type) {
-                            case TEXT:
-                                users[i]['texts']++;
-                                break;
-                            case IMAGE:
-                                users[i]['images']++;
-                                break;
-                            case AUDIO:
-                                users[i]['audio']++;
-                                break;
-                            case VIDEO:
-                                users[i]['video']++;
-                                break;
-                            default:
-                                users[i]['other']++;
-                        }
-                        users[i]['total']++;
-                        found = true;
-                        break;
-                    }
+        },
+        // show outputs
+        showStats: function(data) {
+            var name;
+            document.getElementById("stats").innerHTML = "";
+            var usersStats = document.createElement("div");
+            usersStats.setAttribute('class', 'item');
+            var table = document.createElement("table");
+            table.setAttribute('class', 'table');
+            table.innerHTML = '<caption>' + data.title + '</caption>';
+            table.innerHTML += '<tr><th>Item</th><th>Total</th></tr>';
+            for (var i = 0; i < data.source.length; i++) {
+                if(hasNames) {
+                    name = Utils.getName(data.source[i]['name']);
+                } else {
+                    name = data.source[i]['name'];
                 }
-                //Create new user object if not already present
-                if(!found){
-                    users.push({name:user,total:1,texts:0,images:0,audio:0,video:0,other:0});
-                    switch(type) {
-                        case TEXT:
-                            users[users.length -1]['texts']++;
-                            break;
-                        case IMAGE:
-                            users[users.length -1]['images']++;
-                            break;
-                        case AUDIO:
-                            users[users.length -1]['audio']++;
-                            break;
-                        case VIDEO:
-                            users[users.length -1]['video']++;
-                            break;
-                        default:
-                            users[users.length -1]['other']++;
-                    }
-                }
+                table.innerHTML += '<tr><td>'+ name +'</td><td>'+data.source[i]['total']+'</td></tr>';
             }
-        }
-        // sort descending
-        users.sort(function(a,b){return(a.total > b.total) ? -1 : ((b.total > a.total) ? 1 : 0);});
-        // output results
-        var usersStats = document.createElement("div");
-        usersStats.setAttribute('class', 'item');
-        var table = document.createElement("table");
-        table.setAttribute('class', 'table');
-        table.innerHTML = '<caption>Mensagens por Participantes</caption>';
-        table.innerHTML += '<tr><th>Membro</th><th>Total</th></tr>';
-        for (var i = 0; i < users.length; i++) {
-            table.innerHTML += '<tr><td>'+ Utils.getName(users[i]['name']) +'</td><td>'+users[i]['total']+'</td></tr>';
-        }
-        usersStats.appendChild(table);
-        main.appendChild(usersStats);
+            usersStats.appendChild(table);
+            main.appendChild(usersStats);
+            hasNames = false;
         },
         // get the number of messages for each date
         getMessagesByDate: function() {
@@ -276,7 +304,7 @@
                     // check if there is already data for the date
                     var found = false;
                     for(let i=0; i<dates.length; i++) {
-                        if (dates[i]['date'] == date) {
+                        if (dates[i]['name'] == date) {
                             dates[i]['total']++;
                             found = true;
                             break;
@@ -284,26 +312,17 @@
                     }
                     //Create new object if not already present
                     if(!found){
-                        dates.push({date:date, total:1});
+                        dates.push({name:date, total:1});
                     }
                 }
             }
-            // output results
-            var datesStats = document.createElement("div");
-            datesStats.setAttribute('class', 'item');
-            var table = document.createElement("table");
-            table.setAttribute('class', 'table');
-            table.innerHTML = '<caption>Mensagens por Dia</caption>';
-            table.innerHTML += '<tr><th>Data</th><th>Total</th></tr>';
-            for (let i = 0; i < dates.length; i++) {
-                table.innerHTML += '<tr><td>'+dates[i]['date']+'</td><td>'+dates[i]['total']+'</td></tr>';
-            }
-            datesStats.appendChild(table);
-            main.appendChild(datesStats);
+            return {
+                source: dates,
+                title: "Mensagens por Dia"
+            };
         },
         // get the number of messages for each weekday
         getMessagesByWeekDay: function() {
-            var weekdays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
             var days = [];
             var lines = text.split('\n');
             for (let i = 0; i < lines.length; i++) {
@@ -312,7 +331,7 @@
                     // check if there is already data for the date
                     var found = false;
                     for(let i=0; i < days.length; i++) {
-                        if (days[i]['dayId'] == dayId) {
+                        if (days[i]['name'] == dayId) {
                             days[i]['total']++;
                             found = true;
                             break;
@@ -320,24 +339,19 @@
                     }
                     //Create new object if not already present
                     if(!found){
-                        days.push({dayId:dayId, total:1});
+                        days.push({name:dayId, total:1});
                     }
                 }
             }
             // sort the weekdays
-            days.sort(function(a,b){return(a.dayId > b.dayId) ? 1 : ((b.dayId > a.dayId) ? -1 : 0);});
-            // output results
-            var daysStats = document.createElement("div");
-            daysStats.setAttribute('class', 'item');
-            var table = document.createElement("table");
-            table.setAttribute('class', 'table');
-            table.innerHTML = '<caption>Mensagens por Dia da Semana</caption>';
-            table.innerHTML += '<tr><th>Dia</th><th>Total</th></tr>';
-            for (let i = 0; i < days.length; i++) {
-                table.innerHTML += '<tr><td>'+weekdays[days[i]['dayId']]+'</td><td>'+days[i]['total']+'</td></tr>';
+            days.sort(function(a,b){return(a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);});
+            for(let i=0; i< days.length; i++) {
+                days[i]["name"] = Utils.getWeekDayName(days[i]["name"]);
             }
-            daysStats.appendChild(table);
-            main.appendChild(daysStats);
+            return {
+                source: days,
+                title: "Mensagens por Dia da Semana"
+            };
         },
         // get the number of messages for each hour of the day
         getMessagesByTime: function() {
@@ -349,7 +363,7 @@
                     // check if there is already an object for the hour
                     var found = false;
                     for(let i=0; i<times.length; i++) {
-                        if (times[i]['time'] == time) {
+                        if (times[i]['name'] == time) {
                             times[i]['total']++;
                             found = true;
                             break;
@@ -357,27 +371,19 @@
                     }
                     //Create new object if not already present
                     if(!found){
-                        times.push({time:time, total:1});
+                        times.push({name:time, total:1});
                     }
                 }
             }
             // sort the hours in ascending way
-            times.sort(function(a,b){return(a.time > b.time) ? 1 : ((b.time > a.time) ? -1 : 0);});
-            // output results
-            var timeStats = document.createElement("div");
-            timeStats.setAttribute('class', 'item');
-            var table = document.createElement("table");
-            table.setAttribute('class', 'table');
-            table.innerHTML = '<caption>Mensagens por Horário</caption>';
-            table.innerHTML += '<tr><th>Hora</th><th>Total</th></tr>';
-            for (let i = 0; i < times.length; i++) {
-                table.innerHTML += '<tr><td>'+times[i]['time']+'</td><td>'+times[i]['total']+'</td></tr>';
-            }
-            timeStats.appendChild(table);
-            main.appendChild(timeStats);
+            times.sort(function(a,b){return(a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);});
+            return {
+                source: times,
+                title: "Mensagens por Hora do Dia"
+            };
         },
         // check members who left the group
-        whoLeft: function() {
+        getMembersOut: function() {
             var outers = [];
             var lines = text.split('\n');
             for (let i = 0; i < lines.length; i++) {
@@ -395,23 +401,15 @@
                         }
                         //Create new object if not already present
                         if(!found){
-                            outers.push({name:name, date:date});
+                            outers.push({name:name, total:date});
                         }
                     }
                 }
             }
-            // output results
-            var outersStats = document.createElement("div");
-            outersStats.setAttribute('class', 'item');
-            var table = document.createElement("table");
-            table.setAttribute('class', 'table');
-            table.innerHTML = '<caption>Saíram...</caption>';
-            table.innerHTML += '<tr><th>Membro</th><th>Data</th></tr>';
-            for (let i = 0; i < outers.length; i++) {
-                table.innerHTML += '<tr><td>'+outers[i]['name']+'</td><td>'+outers[i]['date']+'</td></tr>';
-            }
-            outersStats.appendChild(table);
-            main.appendChild(outersStats);
+            return {
+                source: outers,
+                title: "Membros que saíram"
+            };
         }
     };
 
@@ -481,6 +479,11 @@
             date = new Date(adjustedDate);
             return date.getDay();
         },
+        // get the week day name
+        getWeekDayName(day) {
+            var weekdays = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+            return weekdays[day];
+        },
         // dd/mm/yy to mm/dd/yy
         adjustDate: function(date) {
             var temp = date.split("/");
@@ -522,12 +525,13 @@
                 reader.onload = function (e) {
                     document.getElementById("stats").innerHTML = "";
                     text = e.target.result;
-                    Chat.getStats();
-                    Chat.getMessagesByUser();
-                    Chat.getMessagesByDate();
-                    Chat.getMessagesByWeekDay();
-                    Chat.getMessagesByTime();
-                    Chat.whoLeft();
+                    generalStats = Chat.getGeneralStats();
+                    messagesByUser = Chat.getMessagesByUser();
+                    messagesByDay = Chat.getMessagesByDate();
+                    messagesByTime = Chat.getMessagesByTime();
+                    messagesByWeekday = Chat.getMessagesByWeekDay();
+                    membersOut = Chat.getMembersOut();
+                    document.getElementById("myTopnav").style.display = "block";
                 };
                 reader.readAsText(file);
             } else {

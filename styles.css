@@ -63,6 +63,7 @@ tr:hover {
 
 .topnav {
     overflow: hidden;
+    display: none;
 }
 
 .topnav a {
